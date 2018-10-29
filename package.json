@@ -1,32 +1,80 @@
 {
-    "name": "my-commands",
-    "displayName": "my-commands",
-    "description": "my personal collection of commands",
-    "publisher": "microsoft_thinks_this_is_mandatory",
-    "version": "0.1.0",
-    "engines": {
-        "vscode": "^1.28.0"
-    },
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onCommand:personal.hello"
-    ],
-    "main": "./extension",
-    "contributes": {
-        "commands": [
-            {
-                "command": "personal.hello",
-                "title": "personal.hello"
-            }
-        ]
-    },
-    "scripts": {
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "node ./node_modules/vscode/bin/test"
-    },
-    "devDependencies": {
-        "vscode": "^1.1.21"
-    }
+  "name": "my-commands",
+  "displayName": "my-commands",
+  "description": "my personal collection of commands",
+  "publisher": "phil",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.28.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:personal.doc-export",
+    "onCommand:personal.doc-helper",
+    "onCommand:personal.doc-import",
+    "onCommand:personal.doc-init",
+    "onCommand:personal.doc-main",
+    "onCommand:personal.export-cjs"
+  ],
+  "main": "./extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "personal.doc-export",
+        "title": "personal.doc-export"
+      },
+      {
+        "command": "personal.doc-helper",
+        "title": "personal.doc-helper"
+      },
+      {
+        "command": "personal.doc-import",
+        "title": "personal.doc-import"
+      },
+      {
+        "command": "personal.doc-init",
+        "title": "personal.doc-init"
+      },
+      {
+        "command": "personal.doc-main",
+        "title": "personal.doc-main"
+      },
+      {
+        "command": "personal.export-cjs",
+        "title": "personal.export-cjs"
+      }
+    ]
+  },
+  "scripts": {
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "vscode": "^1.1.21"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "semi": false
+  },
+  "eslintConfig": {
+    "extends": [
+      "personal"
+    ]
+  },
+  "dependencies": {
+    "camelcase": "^5.0.0",
+    "cpy": "^7.0.1",
+    "decamelize": "^2.0.0",
+    "del": "^3.0.0",
+    "eslint": "^5.8.0",
+    "eslint-config-personal": "github:olsonpm/eslint-config-personal",
+    "pify": "^4.0.1",
+    "prettier": "1.14.3",
+    "tedent": "github:olsonpm/tedent",
+    "type-detect": "^4.0.8",
+    "user-home": "^2.0.0"
+  }
 }
