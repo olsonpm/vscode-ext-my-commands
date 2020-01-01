@@ -17,12 +17,12 @@ const init = () =>
 function toCommandResult(text, variant) {
   return vscode.commands.registerTextEditorCommand(
     `personal.doc-${variant}`,
-    makeCommandCb(text)
+    makeCommandCb(text, variant)
   )
 }
 
-function makeCommandCb(text) {
-  const header = createHeader(text)
+function makeCommandCb(text, variant) {
+  const header = createHeader(text, variant)
 
   return textEditor => {
     const cursorPos = textEditor.selection.active
@@ -30,14 +30,18 @@ function makeCommandCb(text) {
   }
 }
 
-function createHeader(text) {
+function createHeader(text, variant) {
   const border = repeatStr(text.length + 2)('-')
 
-  const header = tedent(`
+  let header = tedent(`
     //${border}//
     // ${text} //
     //${border}//
   `)
+
+  if (variant !== 'import') {
+    header = '//\n' + header
+  }
 
   return header + '\n'
 }
