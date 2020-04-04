@@ -16,7 +16,8 @@
     "onCommand:personal.doc-import",
     "onCommand:personal.doc-init",
     "onCommand:personal.doc-main",
-    "onCommand:personal.export-cjs"
+    "onCommand:personal.export-cjs",
+    "onCommand:personal.export-es"
   ],
   "main": "./extension",
   "contributes": {
@@ -44,6 +45,10 @@
       {
         "command": "personal.export-cjs",
         "title": "personal.export-cjs"
+      },
+      {
+        "command": "personal.export-es",
+        "title": "personal.export-es"
       }
     ]
   },

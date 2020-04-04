@@ -6,7 +6,7 @@ const cpy = require('cpy'),
 const { name, publisher, version } = require('./package.json')
 
 const conflictingDirGlob = `${publisher}.${name}-*`,
-  extensionsDir = path.join(userHome, '.vscode/extensions'),
+  extensionsDir = path.join(userHome, '.vscode-oss/extensions'),
   destinationDir = path.join(extensionsDir, `${publisher}.${name}-${version}`)
 
 del(conflictingDirGlob, { cwd: extensionsDir }).then(() =>

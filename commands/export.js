@@ -17,7 +17,6 @@ const { replaceAllTextIn } = require('../vscode-utils'),
     removeExtension,
     then,
     toArrayOfValues,
-    toBasename,
   } = require('../utils')
 
 const pFs = pify(_fs),
@@ -25,6 +24,7 @@ const pFs = pify(_fs),
 
 const variantToCommandCb = {
   cjs,
+  es,
 }
 
 const init = () => {
@@ -52,11 +52,23 @@ async function cjs(textEditor) {
   ])
 }
 
+async function es(textEditor) {
+  const { document } = textEditor
+  if (document.isUntitled) return
+
+  return passThrough(document.fileName, [
+    dirname,
+    getEsExports,
+    then(replaceAllTextIn(textEditor)),
+  ])
+}
+
 function getCjsExports(dirPath) {
   return pFs.readdir(dirPath).then(fileNames => {
     const content = passThrough(fileNames, [
       keepWhen(endsWith('.js')),
       discard('index.js'),
+      mMap(removeExtension),
       mMap(toCjsExportLine),
       join('\n'),
     ])
@@ -71,9 +83,39 @@ function getCjsExports(dirPath) {
   })
 }
 
+function getEsExports(dirPath) {
+  return pFs.readdir(dirPath).then(fileNames => {
+    const exports = passThrough(fileNames, [
+      keepWhen(endsWith('.js')),
+      discard('index.js'),
+      mMap(removeExtension),
+      mMap(toEsExportLine),
+      join('\n'),
+    ])
+
+    return exports + '\n'
+  })
+}
+
 function toCjsExportLine(fileName) {
-  const varName = camelcase(removeExtension(fileName))
+  const varName = camelcase(fileName)
   return `${varName}: require('./${fileName}'),`
+}
+
+function isUpper(char) {
+  return char === char.toUpperCase() && char !== char.toLowerCase()
+}
+
+function upperFirst(str) {
+  return str[0].toUpperCase() + str.slice(1)
+}
+
+function toEsExportLine(fileName) {
+  let varName = camelcase(removeExtension(fileName))
+
+  if (isUpper(fileName[0])) varName = upperFirst(varName)
+
+  return `export { default as ${varName} } from './${fileName}'`
 }
 
 module.exports = { init }
