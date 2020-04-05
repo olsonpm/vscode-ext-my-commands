@@ -7,7 +7,7 @@ const camelcase = require('camelcase'),
 
 const { replaceAllTextIn } = require('../vscode-utils'),
   {
-    discard,
+    discardAll,
     endsWith,
     join,
     keepWhen,
@@ -67,11 +67,13 @@ function getCjsExports(dirPath) {
   return pFs.readdir(dirPath).then(fileNames => {
     const content = passThrough(fileNames, [
       keepWhen(endsWith('.js')),
-      discard('index.js'),
+      discardAll(['index.js', 'utils.js']),
       mMap(removeExtension),
       mMap(toCjsExportLine),
       join('\n'),
     ])
+
+    console.log(content)
 
     const exports = tedent(`
       module.exports = {
@@ -87,7 +89,7 @@ function getEsExports(dirPath) {
   return pFs.readdir(dirPath).then(fileNames => {
     const exports = passThrough(fileNames, [
       keepWhen(endsWith('.js')),
-      discard('index.js'),
+      discardAll(['index.js', 'utils.js']),
       mMap(removeExtension),
       mMap(toEsExportLine),
       join('\n'),
