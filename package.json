@@ -4,12 +4,12 @@
   "description": "my personal collection of commands",
   "publisher": "phil",
   "version": "0.1.0",
-  "engines": {
-    "vscode": "^1.28.0"
-  },
   "categories": [
     "Other"
   ],
+  "engines": {
+    "vscode": "^1.28.0"
+  },
   "activationEvents": [
     "onCommand:personal.doc-export",
     "onCommand:personal.doc-helper",
@@ -56,9 +56,6 @@
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "node ./node_modules/vscode/bin/test"
   },
-  "devDependencies": {
-    "vscode": "^1.1.21"
-  },
   "prettier": {
     "singleQuote": true,
     "trailingComma": "es5",
@@ -81,5 +78,8 @@
     "tedent": "github:olsonpm/tedent",
     "type-detect": "^4.0.8",
     "user-home": "^2.0.0"
+  },
+  "devDependencies": {
+    "vscode": "^1.1.37"
   }
 }
