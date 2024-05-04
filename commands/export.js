@@ -14,7 +14,7 @@ const { replaceAllTextIn } = require('../vscode-utils'),
     map,
     mMap,
     passThrough,
-    removeExtension,
+    removeExtensionIfJs,
     then,
     toArrayOfValues,
   } = require('../utils')
@@ -68,7 +68,7 @@ function getCjsExports(dirPath) {
     const content = passThrough(fileNames, [
       keepWhen(endsWith('.js')),
       discardAll(['index.js', 'utils.js']),
-      mMap(removeExtension),
+      mMap(removeExtensionIfJs),
       mMap(toCjsExportLine),
       join('\n'),
     ])
@@ -88,7 +88,7 @@ function getEsExports(dirPath) {
     const exports = passThrough(fileNames, [
       keepWhen(fname => fname.endsWith('.js') || fname.endsWith('.mjs')),
       discardAll(['index.mjs', 'index.js', 'utils.js']),
-      mMap(removeExtension),
+      mMap(removeExtensionIfJs),
       mMap(toEsExportLine),
       join('\n'),
     ])
@@ -111,7 +111,7 @@ function upperFirst(str) {
 }
 
 function toEsExportLine(fileName) {
-  let varName = camelcase(removeExtension(fileName))
+  let varName = camelcase(removeExtensionIfJs(fileName))
 
   if (isUpper(fileName[0])) varName = upperFirst(varName)
 

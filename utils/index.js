@@ -22,7 +22,7 @@ module.exports = {
   map: require('./map'),
   noop: require('./noop'),
   passThrough: require('./pass-through'),
-  removeExtension: require('./remove-extension'),
+  removeExtensionIfJs: require('./remove-extension-if-js'),
   repeatStr: require('./repeat-str'),
   startsWith: require('./starts-with'),
   then: require('./then'),
