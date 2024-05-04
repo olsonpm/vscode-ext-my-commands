@@ -14,6 +14,7 @@ const { replaceAllTextIn } = require('../vscode-utils'),
     map,
     mMap,
     passThrough,
+    removeExtension,
     removeExtensionIfJs,
     then,
     toArrayOfValues,
@@ -111,7 +112,7 @@ function upperFirst(str) {
 }
 
 function toEsExportLine(fileName) {
-  let varName = camelcase(removeExtensionIfJs(fileName))
+  let varName = camelcase(removeExtension(fileName))
 
   if (isUpper(fileName[0])) varName = upperFirst(varName)
 
