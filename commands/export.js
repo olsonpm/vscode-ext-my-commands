@@ -87,7 +87,7 @@ function getEsExports(dirPath) {
   return pFs.readdir(dirPath).then(fileNames => {
     const exports = passThrough(fileNames, [
       keepWhen(fname => fname.endsWith('.js') || fname.endsWith('.mjs')),
-      discardAll(['index.js', 'utils.js']),
+      discardAll(['index.mjs', 'index.js', 'utils.js']),
       mMap(removeExtension),
       mMap(toEsExportLine),
       join('\n'),
