@@ -4,9 +4,6 @@
   "description": "my personal collection of commands",
   "publisher": "phil",
   "version": "0.1.0",
-  "categories": [
-    "Other"
-  ],
   "engines": {
     "vscode": "^1.28.0"
   },
