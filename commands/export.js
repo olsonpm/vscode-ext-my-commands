@@ -6,6 +6,7 @@ const camelcase = require('camelcase'),
   vscode = require('vscode')
 
 const { replaceAllTextIn } = require('../vscode-utils'),
+  asc = require('../utils/compare/string/asc'),
   {
     discardAll,
     endsWith,
@@ -16,9 +17,12 @@ const { replaceAllTextIn } = require('../vscode-utils'),
     passThrough,
     removeExtension,
     removeExtensionIfJs,
+    mSortBy,
     then,
     toArrayOfValues,
   } = require('../utils')
+
+const camelcaseOpts = { preserveConsecutiveUppercase: true }
 
 const pFs = pify(_fs),
   { dirname } = path
@@ -91,6 +95,7 @@ function getEsExports(dirPath) {
       discardAll(['index.mjs', 'index.js', 'utils.js']),
       mMap(removeExtensionIfJs),
       mMap(toEsExportLine),
+      mSortBy(asc),
       join('\n'),
     ])
 
@@ -99,7 +104,7 @@ function getEsExports(dirPath) {
 }
 
 function toCjsExportLine(fileName) {
-  const varName = camelcase(fileName)
+  const varName = camelcase(fileName, camelcaseOpts)
   return `${varName}: require('./${fileName}'),`
 }
 
@@ -112,7 +117,7 @@ function upperFirst(str) {
 }
 
 function toEsExportLine(fileName) {
-  let varName = camelcase(removeExtension(fileName))
+  let varName = camelcase(removeExtension(fileName), camelcaseOpts)
 
   if (isUpper(fileName[0])) varName = upperFirst(varName)
 

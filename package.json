@@ -64,7 +64,7 @@
     ]
   },
   "dependencies": {
-    "camelcase": "^5.0.0",
+    "camelcase": "^6.3.0",
     "cpy": "^7.0.1",
     "decamelize": "^2.0.0",
     "del": "^3.0.0",

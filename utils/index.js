@@ -20,6 +20,7 @@ module.exports = {
   lowerFirst: require('./lower-first'),
   mMap: require('./m-map'),
   map: require('./map'),
+  mSortBy: require('./m-sort-by'),
   noop: require('./noop'),
   passThrough: require('./pass-through'),
   removeExtension: require('./remove-extension'),
