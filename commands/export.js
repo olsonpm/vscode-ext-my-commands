@@ -62,6 +62,7 @@ async function es(textEditor) {
   if (document.isUntitled) return
 
   return passThrough(document.fileName, [
+    dirname,
     getEsExports,
     then(replaceAllTextIn(textEditor)),
   ])
@@ -87,16 +88,11 @@ function getCjsExports(dirPath) {
   })
 }
 
-function getEsExports(curFName) {
-  const dirPath = dirname(curFName)
-  const extMatches = curFName.endsWith('.d.ts')
-    ? fname => fname.endsWith('.d.ts')
-    : fname => fname.endsWith('.js') || fname.endsWith('.mjs')
-
+function getEsExports(dirPath) {
   return pFs.readdir(dirPath).then(fileNames => {
     const exports = passThrough(fileNames, [
-      keepWhen(extMatches),
-      discardAll(['index.d.ts', 'index.mjs', 'index.js', 'utils.js']),
+      keepWhen(fname => fname.endsWith('.js') || fname.endsWith('.mjs')),
+      discardAll(['index.mjs', 'index.js', 'utils.js']),
       mMap(removeExtensionIfJs),
       mMap(toEsExportLine),
       mSortBy(asc),
