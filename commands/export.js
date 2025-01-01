@@ -10,6 +10,7 @@ const { replaceAllTextIn } = require('../vscode-utils'),
   {
     discardAll,
     endsWith,
+    getExt,
     join,
     keepWhen,
     map,
@@ -61,11 +62,13 @@ async function es(textEditor) {
   const { document } = textEditor
   if (document.isUntitled) return
 
-  return passThrough(document.fileName, [
-    dirname,
-    getEsExports,
-    then(replaceAllTextIn(textEditor)),
-  ])
+  const fpath = document.fileName
+  const ext = getExt(fpath)
+
+  if (!ext) return
+
+  const exportsStr = await getEsExports({ fpath, ext })
+  return replaceAllTextIn(textEditor)(exportsStr)
 }
 
 function getCjsExports(dirPath) {
@@ -88,9 +91,13 @@ function getCjsExports(dirPath) {
   })
 }
 
-function getEsExports(dirPath) {
-  return pFs.readdir(dirPath).then(fileNames => {
-    const exports = passThrough(fileNames, [
+async function getEsExports({ fpath, ext }) {
+  const dirPath = dirname(fpath)
+  const fileNames = await pFs.readdir(dirPath)
+
+  let exportsStr
+  if (['js', 'mjs'].includes(ext)) {
+    exportsStr = passThrough(fileNames, [
       keepWhen(fname => fname.endsWith('.js') || fname.endsWith('.mjs')),
       discardAll(['index.mjs', 'index.js', 'utils.js']),
       mMap(removeExtensionIfJs),
@@ -98,9 +105,17 @@ function getEsExports(dirPath) {
       mSortBy(asc),
       join('\n'),
     ])
+  } else if (fpath.endsWith('d.mts') || fpath.endsWith('.d.ts')) {
+    exportsStr = passThrough(fileNames, [
+      keepWhen(fname => fname.endsWith('.d.mts') || fname.endsWith('.d.ts')),
+      discardAll(['index.d.mts', 'index.d.ts']),
+      mMap(toTypeEsExportLine),
+      mSortBy(asc),
+      join('\n'),
+    ])
+  }
 
-    return exports + '\n'
-  })
+  return exportsStr + '\n'
 }
 
 function toCjsExportLine(fileName) {
@@ -122,6 +137,14 @@ function toEsExportLine(fileName) {
   if (isUpper(fileName[0])) varName = upperFirst(varName)
 
   return `export { default as ${varName} } from './${fileName}'`
+}
+
+function toTypeEsExportLine(fileName) {
+  let varName = camelcase(removeExtension(fileName), camelcaseOpts)
+
+  if (isUpper(fileName[0])) varName = upperFirst(varName)
+
+  return `export type { default as ${varName} } from './${fileName}'`
 }
 
 module.exports = { init }
